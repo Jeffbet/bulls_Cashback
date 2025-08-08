@@ -56,6 +56,32 @@ function formatCurrency(amount) {
     });
 }
 
+// Define tier ranges for automatic reallocation
+const DAILY_TIERS = [
+    { min: 1, max: 299.99, percentage: 2 },
+    { min: 300, max: 999.99, percentage: 4 },
+    { min: 1000, max: 4999.99, percentage: 6 },
+    { min: 5000, max: 14999.99, percentage: 8 },
+    { min: 15000, max: 24999.99, percentage: 10 },
+    { min: 25000, max: 29999.99, percentage: 15 },
+    { min: 30000, max: 39999.99, percentage: 20 },
+    { min: 40000, max: Infinity, percentage: 25 }
+];
+
+const WEEKLY_TIERS = [
+    { min: 1, max: 499.99, percentage: 1 },
+    { min: 500, max: 999.99, percentage: 2 },
+    { min: 1000, max: 1499.99, percentage: 3 },
+    { min: 1500, max: 4999.99, percentage: 4 },
+    { min: 5000, max: Infinity, percentage: 5 }
+];
+
+// Function to find correct tier based on GGR value
+function findCorrectTier(ggrValue, mode = currentMode) {
+    const tiers = mode === 'daily' ? DAILY_TIERS : WEEKLY_TIERS;
+    return tiers.find(tier => ggrValue >= tier.min && ggrValue <= tier.max);
+}
+
 // Initialization
 document.addEventListener('DOMContentLoaded', function() {
     console.log('BullsBet Cashback Calculator initialized successfully!');
@@ -135,7 +161,18 @@ function initTierSelection() {
 
     if (ggrInput) {
         ggrInput.addEventListener('input', function() {
-            calculateTierCashback();
+            console.log('GGR input changed:', this.value);
+            autoReallocateTier();
+        });
+        
+        ggrInput.addEventListener('keyup', function() {
+            console.log('GGR keyup:', this.value);
+            autoReallocateTier();
+        });
+        
+        ggrInput.addEventListener('change', function() {
+            console.log('GGR change:', this.value);
+            autoReallocateTier();
         });
     }
 }
@@ -184,6 +221,64 @@ function updateInputHints() {
     }
 }
 
+// Auto-reallocate tier based on GGR value
+function autoReallocateTier() {
+    const ggrInput = document.getElementById('ggrValue');
+    if (!ggrInput || !ggrInput.value.trim()) {
+        hideCalculationResult();
+        return;
+    }
+    
+    // Handle both comma and period as decimal separator
+    let ggrValue = parseFloat(ggrInput.value.replace(',', '.')) || 0;
+    
+    console.log(`Auto-reallocation check: GGR value = ${ggrValue}, current mode = ${currentMode}`);
+    
+    if (ggrValue <= 0) {
+        hideCalculationResult();
+        return;
+    }
+    
+    // Find the correct tier for this GGR value
+    const correctTier = findCorrectTier(ggrValue);
+    console.log(`Correct tier found:`, correctTier);
+    
+    if (correctTier) {
+        // Find and select the correct tier element
+        const tierSelector = currentMode === 'daily' ? '#dailyTierSelector' : '#weeklyTierSelector';
+        const tierElement = document.querySelector(`${tierSelector} .tier-option[data-tier="${correctTier.percentage}"]`);
+        
+        console.log(`Looking for tier element with selector: ${tierSelector} .tier-option[data-tier="${correctTier.percentage}"]`);
+        console.log(`Tier element found:`, tierElement);
+        
+        if (tierElement) {
+            // Check if we need to change the selection
+            const currentlySelected = document.querySelector(`${tierSelector} .tier-option.selected`);
+            const isNewTier = !currentlySelected || currentlySelected !== tierElement;
+            
+            console.log(`Currently selected:`, currentlySelected);
+            console.log(`Is new tier:`, isNewTier);
+            
+            if (isNewTier) {
+                // Show notification about tier reallocation
+                showTierReallocationNotification(correctTier.percentage, ggrValue);
+                
+                // Auto-select the correct tier
+                selectTierByElement(tierElement);
+                
+                console.log(`Auto-reallocated to ${correctTier.percentage}% tier for GGR value: R$ ${ggrValue.toFixed(2)}`);
+            } else {
+                // Same tier, just recalculate
+                calculateTierCashback();
+            }
+        } else {
+            console.error(`Tier element not found for percentage: ${correctTier.percentage}%`);
+        }
+    } else {
+        console.error(`No correct tier found for GGR value: ${ggrValue}`);
+    }
+}
+
 function calculateTierCashback() {
     if (!selectedTier) {
         hideCalculationResult();
@@ -221,6 +316,71 @@ function calculateTierCashback() {
     showCalculationResult(ggrValue, selectedTier.percentage, validCashback);
     
     console.log(`Calculation: ${ggrValue} × ${selectedTier.percentage}% = R$ ${validCashback.toFixed(2)}`);
+}
+
+// Helper function to select tier by element (used by auto-reallocation)
+function selectTierByElement(tierElement) {
+    // Remove selection from all tiers
+    const allTiers = document.querySelectorAll('.tier-option');
+    allTiers.forEach(tier => tier.classList.remove('selected'));
+    
+    // Select the tier
+    tierElement.classList.add('selected');
+    
+    // Store selected tier data
+    selectedTier = {
+        percentage: parseFloat(tierElement.dataset.tier),
+        minValue: parseFloat(tierElement.dataset.min),
+        maxValue: parseFloat(tierElement.dataset.max)
+    };
+    
+    // Show GGR input section
+    const ggrSection = document.getElementById('ggrInputSection');
+    ggrSection.style.display = 'block';
+    
+    // Update input hints
+    updateInputHints();
+    
+    // Calculate cashback
+    calculateTierCashback();
+}
+
+// Show tier reallocation notification
+function showTierReallocationNotification(newPercentage, ggrValue) {
+    // Remove any existing notification
+    const existingNotification = document.querySelector('.tier-reallocation-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'tier-reallocation-notification';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-icon">🔄</span>
+            <span class="notification-text">
+                Tier automaticamente ajustado para <strong>${newPercentage}%</strong> 
+                baseado no valor GGR de <strong>R$ ${formatCurrency(ggrValue)}</strong>
+            </span>
+        </div>
+    `;
+    
+    // Insert notification before the tier selector
+    const currentTierSelector = document.getElementById(currentMode === 'daily' ? 'dailyTierSelector' : 'weeklyTierSelector');
+    if (currentTierSelector) {
+        currentTierSelector.parentNode.insertBefore(notification, currentTierSelector);
+        
+        // Auto-remove notification after 4 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 4000);
+    }
 }
 
 function showCalculationResult(ggr, percentage, cashback) {
