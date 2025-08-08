@@ -1,8 +1,8 @@
-# BullsBet Cashback Calculator
+# Bullsbet Cashback Calculator
 
 ## Overview
 
-BullsBet é uma aplicação web completa que calcula cashback diário e semanal para uma plataforma de apostas. A aplicação apresenta arquitetura de arquivos separados (HTML, CSS, JS), cores da marca BullsBet, validação abrangente de jogos, e interface moderna responsiva com tema escuro e efeitos glassmorphism.
+Cashback Calculator é uma aplicação web completa que calcula cashback diário e semanal para uma plataforma de apostas. A aplicação apresenta arquitetura de arquivos separados (HTML, CSS, JS), cores da marca BullsBet, validação abrangente de jogos, e interface moderna responsiva com tema escuro e efeitos glassmorphism.
 
 ## User Preferences
 
