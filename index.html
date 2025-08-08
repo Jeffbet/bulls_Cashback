@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BullsBet - Calculadora de Cashback</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <noscript>
+        <div class="no-js-message">
+            ⚠️ JavaScript está desabilitado. Para usar a calculadora, habilite JavaScript no seu navegador.
+        </div>
+    </noscript>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="attached_assets/Bullsbet-app_1754611804037.png" alt="BullsBet Logo" width="80" height="80">
+                </div>
+                <div class="header-text">
+                    <h1>BullsBet</h1>
+                    <p>Calculadora de Cashback Diário e Semanal</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Toggle Diário/Semanal -->
+        <div class="toggle-section">
+            <div class="toggle-header">
+                💰 Tipo de Cashback
+            </div>
+            <div class="toggle-body">
+                <div class="toggle-options">
+                    <div class="toggle-option active">
+                        <input type="radio" id="dailyMode" name="cashbackMode" value="daily" checked>
+                        <label for="dailyMode">🎰 Cashback Diário</label>
+                    </div>
+                    <div class="toggle-option">
+                        <input type="radio" id="weeklyMode" name="cashbackMode" value="weekly">
+                        <label for="weeklyMode">🎲 Cashback Semanal</label>
+                    </div>
+                </div>
+                <div class="mode-description">
+                    <div id="dailyDescription" class="mode-desc active">
+                        <strong>🎮 Slots Válidos:</strong> PG Soft, Red Tiger, Pragmatic Play, PopOK
+                    </div>
+                    <div id="weeklyDescription" class="mode-desc">
+                        <strong>🎯 Cassino Ao Vivo:</strong> Todos os jogos (exceto Dragon Tiger, Double Red Dog, Slots, Crash, etc.)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier Selector -->
+        <div class="card tier-selector-card">
+            <div class="card-header">
+                💵 Seletor de Cashback
+            </div>
+            <div class="card-body">
+                <div id="dailyTierSelector" class="tier-selector">
+                    <h4>Selecione o Tier de Cashback Diário</h4>
+                    <div class="tier-options">
+                        <div class="tier-option" data-tier="2" data-min="1" data-max="299.99">
+                            <div class="tier-percentage">2%</div>
+                            <div class="tier-range">R$ 1,00 - R$ 299,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="4" data-min="300" data-max="999.99">
+                            <div class="tier-percentage">4%</div>
+                            <div class="tier-range">R$ 300,00 - R$ 999,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="6" data-min="1000" data-max="4999.99">
+                            <div class="tier-percentage">6%</div>
+                            <div class="tier-range">R$ 1.000,00 - R$ 4.999,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="8" data-min="5000" data-max="14999.99">
+                            <div class="tier-percentage">8%</div>
+                            <div class="tier-range">R$ 5.000,00 - R$ 14.999,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="10" data-min="15000" data-max="24999.99">
+                            <div class="tier-percentage">10%</div>
+                            <div class="tier-range">R$ 15.000,00 - R$ 24.999,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="15" data-min="25000" data-max="29999.99">
+                            <div class="tier-percentage">15%</div>
+                            <div class="tier-range">R$ 25.000,00 - R$ 29.999,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="20" data-min="30000" data-max="39999.99">
+                            <div class="tier-percentage">20%</div>
+                            <div class="tier-range">R$ 30.000,00 - R$ 39.999,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="25" data-min="40000" data-max="999999">
+                            <div class="tier-percentage">25%</div>
+                            <div class="tier-range">R$ 40.000,00+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="weeklyTierSelector" class="tier-selector" style="display: none;">
+                    <h4>Selecione o Tier de Cashback Semanal</h4>
+                    <div class="tier-options">
+                        <div class="tier-option" data-tier="1" data-min="1" data-max="499.99">
+                            <div class="tier-percentage">1%</div>
+                            <div class="tier-range">R$ 1 - R$ 499,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="2" data-min="500" data-max="999.99">
+                            <div class="tier-percentage">2%</div>
+                            <div class="tier-range">R$ 500 - R$ 999,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="3" data-min="1000" data-max="1499.99">
+                            <div class="tier-percentage">3%</div>
+                            <div class="tier-range">R$ 1.000 - R$ 1.499,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="4" data-min="1500" data-max="4999.99">
+                            <div class="tier-percentage">4%</div>
+                            <div class="tier-range">R$ 1.500 - R$ 4.999,99</div>
+                        </div>
+                        <div class="tier-option" data-tier="5" data-min="5000" data-max="999999">
+                            <div class="tier-percentage">5%</div>
+                            <div class="tier-range">Acima de R$ 5.000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GGR Input Section -->
+                <div id="ggrInputSection" class="ggr-input-section" style="display: none;">
+                    <h4>💰 Insira o Valor do GGR</h4>
+                    <div class="ggr-input-container">
+                        <div class="form-group">
+                            <label for="ggrValue">Valor do GGR (R$)</label>
+                            <input type="number" id="ggrValue" class="form-control ggr-input-field" 
+                                   placeholder="0,00" min="0" step="0.01">
+                            <div class="input-hint" id="inputHint">
+                                Insira um valor entre <span id="minValue">R$ 0,00</span> e <span id="maxValue">R$ 0,00</span>
+                            </div>
+                        </div>
+                        <div class="calculation-result" id="calculationResult" style="display: none;">
+                            <div class="result-card">
+                                <div class="result-title">💎 Resultado do Cashback</div>
+                                <div class="result-value" id="resultValue">R$ 0,00</div>
+                                <div class="result-details">
+                                    <span id="resultGGR">R$ 0,00</span> × <span id="resultPercentage">0%</span> = <span id="resultCashback">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clear Button -->
+        <div class="text-center" style="margin-top: 2rem;">
+            <button type="button" class="btn btn-secondary" onclick="clearAll()">
+                🧹 Limpar e Recomeçar
+            </button>
+        </div>
+
+        <!-- Game Validation Section -->
+        <div class="card game-validation-card">
+            <div class="card-header">
+                🎮 Modo de Apuração - Validação de Jogos
+            </div>
+            <div class="card-body">
+                <div class="validation-controls">
+                    <div class="form-group">
+                        <label for="gameProviderSelect">Selecione o Provedor (somente para Cashback Diário)</label>
+                        <select id="gameProviderSelect" class="form-control game-select" disabled>
+                            <option value="">Escolha um provedor...</option>
+                            <option value="PG Soft">PG Soft</option>
+                            <option value="Red Tiger">Red Tiger</option>
+                            <option value="Pragmatic Play">Pragmatic Play</option>
+                            <option value="PopOK">PopOK</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameNameInput">Nome do Jogo</label>
+                        <input type="text" id="gameNameInput" class="form-control game-input" 
+                               placeholder="Digite o nome do jogo..." autocomplete="off">
+                        <div class="game-suggestions" id="gameSuggestions"></div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary validate-btn" onclick="validateGame()">
+                        🔍 Validar Jogo
+                    </button>
+                </div>
+                
+                <div class="validation-result" id="validationResult" style="display: none;">
+                    <div class="result-status" id="resultStatus"></div>
+                    <div class="result-message" id="resultMessage"></div>
+                </div>
+                
+                <div class="game-lists-toggle" style="margin-top: 2rem; text-align: center;">
+                    <button type="button" class="btn btn-secondary" onclick="toggleGameLists()">
+                        📜 Ver Lista Completa de Jogos
+                    </button>
+                </div>
+                
+                <div class="complete-game-lists" id="completeGameLists" style="display: none;">
+                    <div class="provider-games">
+                        <h5>🎯 Jogos Válidos para Cashback Diário:</h5>
+                        <div id="dailyGamesList"></div>
+                    </div>
+                    
+                    <div class="weekly-exclusions">
+                        <h5>❌ Jogos Excluídos do Cashback Semanal:</h5>
+                        <div class="excluded-games">
+                            Dragon Tiger, Double Red Dog, Slots, Crash, Cassino Virtual, Esportes, Baccarat, Bac Bo
+                        </div>
+                        <p><em>Cashback Semanal: Todos os outros jogos de Cassino Ao Vivo são válidos.</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
